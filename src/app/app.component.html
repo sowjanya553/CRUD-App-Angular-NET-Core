@@ -1,0 +1,195 @@
+<!-- <h1>{{ title }}</h1>
+
+<button (click)="loadStudents()">Reload from API</button>
+
+<p *ngIf="errorMessage" style="color: red;">
+  {{ errorMessage }}
+</p>
+
+<div *ngIf="!errorMessage && students.length === 0">
+  No students found.
+</div>
+
+<table *ngIf="students.length > 0" border="1" cellpadding="5" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Address1</th>
+      <th>Address2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let s of students">
+      <td>{{ s.id }}</td>
+      <td>{{ s.name }}</td>
+      <td>{{ s.email }}</td>
+      <td>{{ s.mobile }}</td>
+      <td>{{ s.city }}</td>
+      <td>{{ s.state }}</td>
+      <td>{{ s.address1 }}</td>
+      <td>{{ s.address2 }}</td>
+    </tr>
+  </tbody>
+</table> -->
+
+
+<div class="container py-4">
+  <h2 class="mb-4 text-center">Student Management</h2>
+
+  <!-- Error from API -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="row g-3">
+
+    <!-- LEFT: TABLE (col-8) -->
+    <div class="col-8">
+      <div class="card bg-warning">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-bold">Student List</span>
+          <button class="btn btn-sm btn-outline-dark" (click)="loadStudents()">
+            Reload from API
+          </button>
+        </div>
+
+        <div class="card-body bg-white p-2">
+          <table class="table table-sm table-striped table-hover table-bordered mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of students; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ s.name }}</td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.mobile }}</td>
+                <td>{{ s.city }}</td>
+                <td>{{ s.state }}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-1"
+                          (click)="onEdit(s)">
+                    Edit
+                  </button>
+                  <button class="btn btn-sm btn-danger"
+                          (click)="onDelete(s.id)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="students.length === 0">
+                <td colspan="7" class="text-center text-muted">
+                  No students available. Click "Reload from API".
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: FORM (col-4) -->
+    <div class="col-4">
+      <div class="card bg-warning">
+        <div class="card-header fw-bold">
+          {{ selectedStudent.id ? 'Edit Student' : 'Add Student' }}
+        </div>
+
+        <div class="card-body bg-white">
+          <!-- Template-driven form -->
+          <form (ngSubmit)="onSubmit()" #studentForm="ngForm">
+
+            <div class="mb-2">
+              <label class="form-label">Name</label>
+              <input type="text"
+                     class="form-control"
+                     name="name"
+                     [(ngModel)]="selectedStudent.name"
+                     required />
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Email</label>
+              <input type="email"
+                     class="form-control"
+                     name="email"
+                     [(ngModel)]="selectedStudent.email" />
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Mobile</label>
+              <input type="text"
+                     class="form-control"
+                     name="mobile"
+                     [(ngModel)]="selectedStudent.mobile" />
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">City</label>
+              <input type="text"
+                     class="form-control"
+                     name="city"
+                     [(ngModel)]="selectedStudent.city" />
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">State</label>
+              <input type="text"
+                     class="form-control"
+                     name="state"
+                     [(ngModel)]="selectedStudent.state" />
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Address 1</label>
+              <input type="text"
+                     class="form-control"
+                     name="address1"
+                     [(ngModel)]="selectedStudent.address1" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Address 2</label>
+              <input type="text"
+                     class="form-control"
+                     name="address2"
+                     [(ngModel)]="selectedStudent.address2" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <button type="submit"
+                      class="btn btn-success"
+                      [disabled]="studentForm.invalid">
+                {{ selectedStudent.id ? 'Update' : 'Save' }}
+              </button>
+
+              <button type="button"
+                      class="btn btn-secondary"
+                      (click)="onReset(studentForm)">
+                Reset
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
